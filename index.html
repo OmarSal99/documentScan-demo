@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-eval';"
+    />
+    <link href="index.css" rel="stylesheet" type="text/css" />
+    <title>Scanner Example</title>
+  </head>
+  <body>
+    <div class="container">
+      <section>
+        <div class="scanner-wrapper">
+          <div id="scanner-img" class="scanner">
+            <div id="mask"></div>
+            <!-- <img
+              src="https://cdn.spreadsheet123.com/images/ExcelTemplates/price-quote-hourly_lg.png"
+              alt="Scanning Image"
+            /> -->
+          </div>
+        </div>
+      </section>
+      <div class="separator"></div>
+      <section>
+        <div class="scanners-container">
+          <h2>Scanners:</h2>
+          <!-- <button id="getScanners">Get Scanners List</button> -->
+          <div id="scanners">
+            <table id="scannersTable" class="scanners-table">
+              <thead>
+                <tr>
+                  <th>ScannerId</th>
+                  <th>Name</th>
+                  <th></th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div id="statusDiv">
+            <p id="scanStatus">scanStatus: <span id="scanSatusDiv"></span></p>
+            <button id="cancelBtn" disabled="true">Cancel Scanning</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script src="document-scan-sdk.js"></script>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>

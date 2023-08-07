@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "text scan",
+  "version": "1.0",
+
+  "action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "host_permissions": ["https://developer.chrome.com/*"],
+  "permissions": ["tabs", "notifications"]
+}

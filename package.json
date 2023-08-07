@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "document-scan-sdk": "file: /home/user/Desktop/document-scan-sdk"
+  }
+}
