@@ -56,16 +56,16 @@ const openScanner = (scannerId) => {
 const startScan = async (scannerHandle, options) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(`${scannerHandle} started scanning`);
+      resolve(`scanJob-${scannerHandle}`);
     }, 2000);
   });
 };
 
-const cancelScan = async (scannerHandle) => {
+const cancelScan = async (scanJob) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(`${scannerHandle} cancelled scanning`);
-    }, 2000);
+      resolve(`${scanJob} cancelled`);
+    }, 1000);
   });
 };
 
@@ -73,7 +73,7 @@ const closeScanner = async (scannerHandle) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve(`${scannerHandle} closed`);
-    }, 2000);
+    }, 1000);
   });
 };
 
@@ -161,12 +161,23 @@ const CONNECTION_STATUS = {
 
 const SCANNING_STATUS = {
   ready: "READY",
-  in_progress: "IN PROGRESS",
+  scanning: "SCANNING",
   cancelling: "CANCELLING",
 };
 
 let CURRENT_SCANNING_STATUS = "";
 let CURRENT_CONNECTION_STATUS = CONNECTION_STATUS.disconnected;
+
+const opennedScanners = [];
+
+const showNotification = (id, title, message) => {
+  chrome.notifications.create(id, {
+    type: "basic",
+    iconUrl: "./icon-16.png",
+    title: title,
+    message: message,
+  });
+};
 
 const getScannerList = async (options) => {
   return (0,_api__WEBPACK_IMPORTED_MODULE_0__.getScannersList)(options);
@@ -174,34 +185,52 @@ const getScannerList = async (options) => {
 
 const openScannerdev = async (scannerId) => {
   return new Promise(async (resolve, reject) => {
-    let scannerHandle = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.openScanner)(scannerId);
-    CURRENT_CONNECTION_STATUS = CONNECTION_STATUS.connected;
-    CURRENT_SCANNING_STATUS = SCANNING_STATUS.ready;
-    chrome.notifications.create("open-scanner", {
-      type: "basic",
-      iconUrl: "./icon-16.png",
-      title: "Scanner connected",
-      message: `Scanner ${scannerHandle} is connected and ready to scan`,
-    });
-    resolve(scannerHandle);
+    try {
+      let scannerHandle = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.openScanner)(scannerId);
+      opennedScanners.push(scannerHandle);
+      CURRENT_SCANNING_STATUS = SCANNING_STATUS.ready;
+      showNotification(
+        "open_scanner",
+        "Scanner connected",
+        `Scanner ${scannerHandle} is connected and ready to scan`
+      );
+      resolve(scannerHandle);
+    } catch (e) {
+      showNotification("open_scanner", "Openning scanner failed", e);
+      reject(e);
+    }
   });
 };
 
 const startScanner = async (scannerHandle, options) => {
   return new Promise(async (resolve, reject) => {
-    if (CURRENT_CONNECTION_STATUS === CONNECTION_STATUS.disconnected) {
+    if (!opennedScanners.includes(scannerHandle)) {
+      showNotification(
+        "start_scan",
+        "Scanning failed",
+        "There is no connected scanner"
+      );
       reject("There is no connected scanner");
       return;
     }
-    let data = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.startScan)(scannerHandle, options);
-    CURRENT_SCANNING_STATUS = SCANNING_STATUS.in_progress;
-    chrome.notifications.create("open-scanner", {
-      type: "basic",
-      iconUrl: "./icon-16.png",
-      title: "Scanning in progress",
-      message: data,
-    });
-    resolve(data);
+    try {
+      CURRENT_SCANNING_STATUS = SCANNING_STATUS.scanning;
+      let scanJob = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.startScan)(scannerHandle, options);
+      CURRENT_SCANNING_STATUS = SCANNING_STATUS.ready;
+      showNotification(
+        "start_scan",
+        "Scanning in progress",
+        `${scannerHandle} started Scanning`
+      );
+      resolve(scanJob);
+    } catch (e) {
+      showNotification(
+        "start_scan",
+        "Scanning failed",
+        "could not execute scan"
+      );
+      reject(e);
+    }
   });
 };
 
@@ -209,58 +238,62 @@ const readScanData = async (jobId) => {};
 
 const cancelScannner = async (jobId) => {
   return new Promise(async (resolve, reject) => {
-    if (CURRENT_CONNECTION_STATUS === CONNECTION_STATUS.disconnected) {
-      reject("There is no connected scanner");
-      return;
-    }
-    if (CURRENT_SCANNING_STATUS !== SCANNING_STATUS.in_progress) {
+    if (CURRENT_SCANNING_STATUS !== SCANNING_STATUS.scanning) {
+      showNotification(
+        "cancel_scan",
+        "Could not cancel scan",
+        "There are no scanning jobs running"
+      );
       reject("There are no scanning jobs running");
       return;
     }
-    CURRENT_SCANNING_STATUS = SCANNING_STATUS.cancelling;
-    let data = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.cancelScan)(jobId);
-    CURRENT_SCANNING_STATUS = SCANNING_STATUS.ready;
-    chrome.notifications.create("open-scanner", {
-      type: "basic",
-      iconUrl: "./icon-16.png",
-      title: "scanning cancelled",
-      message: data,
-    });
-    resolve(data);
+    try {
+      CURRENT_SCANNING_STATUS = SCANNING_STATUS.cancelling;
+      let data = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.cancelScan)(jobId);
+      CURRENT_SCANNING_STATUS = SCANNING_STATUS.ready;
+      showNotification("cancel_scan", "scanning cancelled", data);
+      resolve(data);
+    } catch (e) {
+      showNotification("cancel_scan", "Could not cancel scan", e);
+      reject(e);
+    }
   });
 };
 
 const closeScannerDev = async (scannerHandle) => {
   return new Promise(async (resolve, reject) => {
-    if (CURRENT_CONNECTION_STATUS === CONNECTION_STATUS.disconnected) {
+    if (!opennedScanners.includes(scannerHandle)) {
+      showNotification(
+        "close_scanner",
+        "Closing failed",
+        "There is no connected scanner"
+      );
       reject("There is no connected scanner");
       return;
     }
-    if (CURRENT_SCANNING_STATUS === SCANNING_STATUS.in_progress) {
+    if (CURRENT_SCANNING_STATUS === SCANNING_STATUS.scanning) {
+      showNotification(
+        "close_scanner",
+        "Closing failed",
+        "a scanning job is in progress"
+      );
       reject("a scanning job is in progress");
       return;
     }
-    let data = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.closeScanner)(scannerHandle);
-    CURRENT_SCANNING_STATUS = "";
-    CURRENT_CONNECTION_STATUS = CONNECTION_STATUS.disconnected;
-    chrome.notifications.create("open-scanner", {
-      type: "basic",
-      iconUrl: "./icon-16.png",
-      title: "Scanner closed",
-      message: data,
-    });
-    resolve(data);
+    try {
+      let data = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.closeScanner)(scannerHandle);
+      opennedScanners.filter((item) => item !== scannerHandle);
+      if (opennedScanners.length === 0) {
+        CURRENT_SCANNING_STATUS = "";
+      }
+      showNotification("close_scanner", "Scanner closed", data);
+      resolve(data);
+    } catch (e) {
+      showNotification("close_scanner", "Closing failed", e);
+      reject(e);
+    }
   });
 };
-
-// module.exports = {
-//   getScannerList,
-//   openScannerdev,
-//   startScanner,
-//   readScanData,
-//   cancelScannner,
-//   closeScannerDev,
-// };
 
 })();
 

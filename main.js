@@ -1,6 +1,5 @@
-// const getScannersButton = document.getElementById("getScanners");
 const cancelButton = document.getElementById("cancelBtn");
-// const connectButton = document.getElementById("connect");
+const refreshBtn = document.getElementById("refreshBtn");
 
 let currentOpennedScanners = [];
 function createButton(label, id, onClicked) {
@@ -41,12 +40,16 @@ const onScanButtonClicked = async (scannerHandle) => {
   img.alt = "scanner-img";
   let container = document.getElementById("scanner-img");
   let mask = document.getElementById("mask");
-  container.replaceChild(img, container.lastChild);
+  if (container.getElementsByTagName("img").item(0)) {
+    container.getElementsByTagName("img").item(0).remove();
+  }
+  container.appendChild(img);
   mask.classList.add("gradient-mask");
   await documentScan.startScanner(scannerHandle);
   document
     .getElementById("scanSatusDiv")
     .replaceChildren(document.createTextNode("Ready"));
+  cancelButton.disabled = true;
   mask.classList.remove("gradient-mask");
 };
 
@@ -69,13 +72,7 @@ const onCloseButtonClicked = async (scannerHandle, scannerId) => {
   }
 };
 
-// getScannersButton.addEventListener("click", () => {});
-
-cancelButton.addEventListener("click", async () => {
-  let handle = await documentScan.cancelScannner();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
+const onRefresh = () => {
   documentScan.getScannerList({}).then((scanners) => {
     const tbody = document.createElement("tbody");
     scanners.forEach((scanner) => {
@@ -100,14 +97,26 @@ document.addEventListener("DOMContentLoaded", () => {
       tbody.appendChild(tr);
     });
     const table = document.getElementById("scannersTable");
-    //table.removeChild(table.lastChild);
     table.replaceChild(tbody, table.lastChild);
   });
+};
+
+cancelButton.addEventListener("click", async () => {
+  // let handle = await documentScan.cancelScannner();
+  document
+    .getElementById("scanSatusDiv")
+    .replaceChildren(document.createTextNode("Ready"));
+  cancelButton.disabled = true;
+  let container = document.getElementById("scanner-img");
+  container.removeChild(container.getElementsByTagName("img").item(0));
+  let mask = document.getElementById("mask");
+  mask.classList.remove("gradient-mask");
 });
-// usbButton.addEventListener("click", async () => {
-//   let handle = await documentScan.openScannerdev(5);
-//   documentScan
-//     .startScanner(handle)
-//     .then((data) => console.log(data))
-//     .catch((error) => console.log(error));
-// });
+
+refreshBtn.addEventListener("click", () => {
+  onRefresh();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  onRefresh();
+});

@@ -6,6 +6,10 @@
       content="script-src 'self' 'unsafe-eval';"
     />
     <link href="index.css" rel="stylesheet" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
     <title>Scanner Example</title>
   </head>
   <body>
@@ -27,6 +31,15 @@
           <h2>Scanners:</h2>
           <!-- <button id="getScanners">Get Scanners List</button> -->
           <div id="scanners">
+            <div class="refresh-button-container">
+              <button
+                id="refreshBtn"
+                class="button refresh-button"
+                title="Refresh"
+              >
+                <span class="material-symbols-outlined">refresh</span>
+              </button>
+            </div>
             <table id="scannersTable" class="scanners-table">
               <thead>
                 <tr>
@@ -38,8 +51,10 @@
             </table>
           </div>
           <div id="statusDiv">
-            <p id="scanStatus">scanStatus: <span id="scanSatusDiv"></span></p>
-            <button id="cancelBtn" disabled="true">Cancel Scanning</button>
+            <p id="scanStatus">Scan Status: <span id="scanSatusDiv"></span></p>
+            <button id="cancelBtn" class="button" disabled>
+              Cancel Scanning
+            </button>
           </div>
         </div>
       </section>
