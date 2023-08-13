@@ -39,6 +39,14 @@ const getScannersList = (options) => {
           id: "2547842",
           name: "HP ScanJet Pro 3500 f1 Flatbed Scanner (L2741A)",
         },
+        {
+          id: "8572642",
+          name: "Epson WorkForce DS-1630 A4 Document Scanner",
+        },
+        {
+          id: "5541968",
+          name: "Plustek PS186 Desktop Document Scanner",
+        },
       ];
       resolve(scanners);
     }, 1000);
@@ -215,13 +223,13 @@ const startScanner = async (scannerHandle, options) => {
     }
     try {
       CURRENT_SCANNING_STATUS = SCANNING_STATUS.scanning;
-      let scanJob = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.startScan)(scannerHandle, options);
-      CURRENT_SCANNING_STATUS = SCANNING_STATUS.ready;
       showNotification(
         "start_scan",
         "Scanning in progress",
         `${scannerHandle} started Scanning`
       );
+      let scanJob = await (0,_api__WEBPACK_IMPORTED_MODULE_0__.startScan)(scannerHandle, options);
+      CURRENT_SCANNING_STATUS = SCANNING_STATUS.ready;
       resolve(scanJob);
     } catch (e) {
       showNotification(

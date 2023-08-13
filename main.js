@@ -1,6 +1,9 @@
 const cancelButton = document.getElementById("cancelBtn");
 const refreshBtn = document.getElementById("refreshBtn");
+const themeBtn = document.getElementById("themeBtn");
+const theme = document.getElementById("theme");
 
+let currentTheme = "orange";
 let currentOpennedScanners = [];
 function createButton(label, id, onClicked) {
   const button = document.createElement("button");
@@ -102,7 +105,6 @@ const onRefresh = () => {
 };
 
 cancelButton.addEventListener("click", async () => {
-  // let handle = await documentScan.cancelScannner();
   document
     .getElementById("scanSatusDiv")
     .replaceChildren(document.createTextNode("Ready"));
@@ -115,6 +117,16 @@ cancelButton.addEventListener("click", async () => {
 
 refreshBtn.addEventListener("click", () => {
   onRefresh();
+});
+
+themeBtn.addEventListener("click", () => {
+  if (currentTheme === "orange") {
+    currentTheme = "blue";
+    theme.href = "blue-theme.css";
+  } else {
+    currentTheme = "orange";
+    theme.href = "orange-theme.css";
+  }
 });
 
 document.addEventListener("DOMContentLoaded", () => {

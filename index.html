@@ -5,7 +5,7 @@
       http-equiv="Content-Security-Policy"
       content="script-src 'self' 'unsafe-eval';"
     />
-    <link href="index.css" rel="stylesheet" type="text/css" />
+    <link id="theme" href="orange-theme.css" rel="stylesheet" type="text/css" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
@@ -18,34 +18,29 @@
         <div class="scanner-wrapper">
           <div id="scanner-img" class="scanner">
             <div id="mask"></div>
-            <!-- <img
-              src="https://cdn.spreadsheet123.com/images/ExcelTemplates/price-quote-hourly_lg.png"
-              alt="Scanning Image"
-            /> -->
           </div>
         </div>
       </section>
       <div class="separator"></div>
       <section>
+        <button id="themeBtn" class="button">Toggle Theme</button>
         <div class="scanners-container">
           <h2>Scanners:</h2>
-          <!-- <button id="getScanners">Get Scanners List</button> -->
           <div id="scanners">
-            <div class="refresh-button-container">
-              <button
-                id="refreshBtn"
-                class="button refresh-button"
-                title="Refresh"
-              >
-                <span class="material-symbols-outlined">refresh</span>
-              </button>
-            </div>
             <table id="scannersTable" class="scanners-table">
               <thead>
                 <tr>
                   <th>ScannerId</th>
                   <th>Name</th>
-                  <th></th>
+                  <th style="text-align: end">
+                    <button
+                      id="refreshBtn"
+                      class="button refresh-button"
+                      title="Refresh"
+                    >
+                      <span class="material-symbols-outlined">refresh</span>
+                    </button>
+                  </th>
                 </tr>
               </thead>
             </table>
