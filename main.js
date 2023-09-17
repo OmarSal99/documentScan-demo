@@ -1,10 +1,10 @@
+import { DocumentScanSdk } from "./node_modules/document-scan-sdk/index.js";
 const cancelButton = document.getElementById("cancelBtn");
 const refreshBtn = document.getElementById("refreshBtn");
 const themeBtn = document.getElementById("themeBtn");
-const theme = document.getElementById("theme");
 
-let currentTheme = "orange";
 let currentOpennedScanners = [];
+const documentScanSdk = new DocumentScanSdk();
 function createButton(label, id, onClicked) {
   const button = document.createElement("button");
   button.innerHTML = label;
@@ -15,7 +15,7 @@ function createButton(label, id, onClicked) {
 }
 
 const onOpenButtonClicked = async (scannerId) => {
-  let handle = await documentScan.openScannerdev(scannerId);
+  let handle = await documentScanSdk.openScannerdev(scannerId);
   currentOpennedScanners.push(handle);
   document
     .getElementById(`scanner-${scannerId}`)
@@ -48,7 +48,7 @@ const onScanButtonClicked = async (scannerHandle) => {
   }
   container.appendChild(img);
   mask.classList.add("gradient-mask");
-  await documentScan.startScanner(scannerHandle);
+  await documentScanSdk.startScanner(scannerHandle);
   document
     .getElementById("scanSatusDiv")
     .replaceChildren(document.createTextNode("Ready"));
@@ -58,7 +58,7 @@ const onScanButtonClicked = async (scannerHandle) => {
 
 const onCloseButtonClicked = async (scannerHandle, scannerId) => {
   try {
-    await documentScan.closeScannerDev(scannerHandle);
+    await documentScanSdk.closeScannerDev(scannerHandle);
     currentOpennedScanners = currentOpennedScanners.filter(
       (item) => item !== scannerHandle
     );
@@ -76,7 +76,7 @@ const onCloseButtonClicked = async (scannerHandle, scannerId) => {
 };
 
 const onRefresh = () => {
-  documentScan.getScannerList({}).then((scanners) => {
+  documentScanSdk.getScannerList({}).then((scanners) => {
     const tbody = document.createElement("tbody");
     scanners.forEach((scanner) => {
       let tr = document.createElement("tr");
@@ -119,15 +119,27 @@ refreshBtn.addEventListener("click", () => {
   onRefresh();
 });
 
-themeBtn.addEventListener("click", () => {
-  if (currentTheme === "orange") {
-    currentTheme = "blue";
-    theme.href = "blue-theme.css";
-  } else {
-    currentTheme = "orange";
-    theme.href = "orange-theme.css";
-  }
-});
+const toggler = (function () {
+  /** @private {boolean} */
+  let toggleState_ = false;
+
+  /**
+   * toggles the theme selected, by changing a document attribute.
+   */
+  const changeTheme = function () {
+    toggleState_ = !toggleState_;
+    if (toggleState_) {
+      document.documentElement.setAttribute("page-theme", "dark");
+    } else {
+      document.documentElement.setAttribute("page-theme", "light");
+    }
+  };
+  return {
+    changeTheme,
+  };
+})();
+
+themeBtn.addEventListener("click", toggler.changeTheme);
 
 document.addEventListener("DOMContentLoaded", () => {
   onRefresh();
