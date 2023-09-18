@@ -1,4 +1,4 @@
-import { DocumentScanSdk } from "./node_modules/document-scan-sdk/index.js";
+import DocumentScanSdk from "./node_modules/document-scan-sdk/index.js";
 const cancelButton = document.getElementById("cancelBtn");
 const refreshBtn = document.getElementById("refreshBtn");
 const themeBtn = document.getElementById("themeBtn");
