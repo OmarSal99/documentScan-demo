@@ -2,6 +2,12 @@ import DocumentScanSdk from "./node_modules/document-scan-sdk/index.js";
 const cancelButton = document.getElementById("cancelBtn");
 const refreshBtn = document.getElementById("refreshBtn");
 const themeBtn = document.getElementById("themeBtn");
+const t1XValue = document.getElementById("t1-x-value");
+const brXValue = document.getElementById("br-x-value");
+const t1YValue = document.getElementById("t1-y-value");
+const brYValue = document.getElementById("br-y-value");
+const t1YSlider = document.getElementById("t1-y-slider");
+const brYSlider = document.getElementById("br-y-slider");
 
 let currentOpennedScanners = [];
 const documentScanSdk = new DocumentScanSdk();
@@ -30,6 +36,7 @@ const onOpenButtonClicked = async (scannerId) => {
       onCloseButtonClicked(handle, scannerId);
     })
   );
+  // updateOptions();
 };
 
 const onScanButtonClicked = async (scannerHandle) => {
@@ -48,7 +55,13 @@ const onScanButtonClicked = async (scannerHandle) => {
   }
   container.appendChild(img);
   mask.classList.add("gradient-mask");
-  await documentScanSdk.startScanner(scannerHandle);
+  const options = {
+    "t1-x": t1XValue.value,
+    "br-x": brXValue.value,
+    "t1-y": t1YValue.value,
+    "br-y": brYValue.value,
+  };
+  await documentScanSdk.startScanner(scannerHandle, options);
   document
     .getElementById("scanSatusDiv")
     .replaceChildren(document.createTextNode("Ready"));
@@ -140,6 +153,14 @@ const toggler = (function () {
 })();
 
 themeBtn.addEventListener("click", toggler.changeTheme);
+
+t1YSlider.addEventListener("input", () => {
+  t1YValue.value = t1YSlider.value;
+});
+
+brYSlider.addEventListener("input", () => {
+  brYValue.value = brYSlider.value;
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   onRefresh();

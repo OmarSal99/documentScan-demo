@@ -1,17 +1,17 @@
 :root {
-  --background-color: #ffffff;
-  --table-header: #ff9800;
-  --table-row-hover: #ffedcc;
-  --scanner-wrapper: #f5b540;
-  --table-button-hover: #f5b540;
-}
-
-[page-theme="dark"] {
   --background-color: #edf3fa;
   --table-header: #1065b4;
   --table-row-hover: #a9d2f8;
   --scanner-wrapper: #1065b4;
   --table-button-hover: #71b5f5;
+}
+
+[page-theme="dark"] {
+  --background-color: #ffffff;
+  --table-header: #ff9800;
+  --table-row-hover: #ffedcc;
+  --scanner-wrapper: #f5b540;
+  --table-button-hover: #f5b540;
 }
 
 body {
@@ -184,4 +184,48 @@ div {
 
 .button:not([disabled]):hover {
   background-color: var(--table-row-hover);
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px; /* Adjust the width as needed */
+}
+
+/* Style for each form row (label and input) */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px; /* Adjust the spacing between rows as needed */
+  justify-content: center;
+}
+
+/* Style for labels */
+.form-label {
+  font-weight: bold;
+}
+
+/* Style for input fields */
+.form-input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.slider-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.slider-container input {
+  width: 100%;
+}
+#br-y-value {
+  width: 35px;
+  height: 25px;
+}
+
+#t1-y-value {
+  width: 35px;
+  height: 25px;
 }
