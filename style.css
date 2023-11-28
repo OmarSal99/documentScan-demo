@@ -1,4 +1,15 @@
-:root {
+body {
+  height: 95vh;
+  width: 95vw;
+  margin: 0px;
+}
+
+.scan-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* :root {
   --background-color: #ffffff;
   --table-header: #ff9800;
   --table-row-hover: #ffedcc;
@@ -184,4 +195,4 @@ div {
 
 .button:not([disabled]):hover {
   background-color: var(--table-row-hover);
-}
+} */

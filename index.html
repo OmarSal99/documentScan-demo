@@ -13,18 +13,18 @@
     <title>Scanner Example</title>
   </head>
   <body>
-    <div class="container">
-      <section>
+    <!-- <div class="container"> -->
+    <!-- <section>
         <div class="scanner-wrapper">
           <div id="scanner-img" class="scanner">
             <div id="mask"></div>
           </div>
         </div>
-      </section>
-      <div class="separator"></div>
+      </section> -->
+    <!-- <div class="separator"></div>
       <section>
-        <button id="themeBtn" class="button">Toggle Theme</button>
-        <div class="scanners-container">
+        <button id="themeBtn" class="button">Toggle Theme</button> -->
+    <!-- <div class="scanners-container">
           <h2>Scanners:</h2>
           <div id="scanners">
             <table id="scannersTable" class="scanners-table">
@@ -44,17 +44,27 @@
                 </tr>
               </thead>
             </table>
-          </div>
-          <div id="statusDiv">
+          </div> -->
+    <!-- <div id="statusDiv">
             <p id="scanStatus">Scan Status: <span id="scanSatusDiv"></span></p>
             <button id="cancelBtn" class="button" disabled>
               Cancel Scanning
             </button>
-          </div>
-        </div>
-      </section>
-    </div>
+          </div> -->
+    <!-- </div>
+      </section> -->
+    <!-- </div> -->
     <!-- <script src="document-scan-sdk.js"></script> -->
+    <div id="container" class="scan-container"></div>
+    <input
+      type="range"
+      oninput="rangeValue.innerText = this.value"
+      min="2.2"
+      max="10.5"
+      step="0.1"
+      value="5.5"
+    />
+    <p id="rangeValue">5.5</p>
     <script type="module" src="main.js"></script>
   </body>
 </html>

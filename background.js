@@ -1,3 +1,5 @@
-chrome.windows.create({
-  url: "index.html",
+chrome.action.onClicked.addListener(function (tab) {
+  chrome.windows.create({
+    url: "index.html",
+  });
 });
